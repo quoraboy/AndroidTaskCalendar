@@ -17,7 +17,12 @@ class HomeRepositoryImpl @Inject constructor(private val apiService: ApiService)
     override fun storeCalendarTask(title: String, description: String): Flow<SimpleStatusResponse> {
         return flow {
             val requestBody = prepareRequestBody(title, description)
-            emit(apiService.storeCalendarTask(requestBody))
+            val response = apiService.storeCalendarTask(requestBody)
+            if (response.isSuccessful){
+                emit(response.body()?: throw Exception("Empty response body"))
+            } else {
+                throw Exception(response.message())
+            }
         }
     }
 
