@@ -6,22 +6,22 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.core.home.model.GetCalendarTask
 import com.example.feature.Dimens
+import com.example.feature.UiState
 import com.example.feature.component.InputDialog
 import com.example.feature.component.ShowToast
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen() {
     val viewModel: HomeViewModel = hiltViewModel()
@@ -32,98 +32,29 @@ fun HomeScreen() {
     var showDialog by remember { mutableStateOf(false) }
     var selectedTaskId by remember { mutableStateOf<Int?>(null) }
 
-
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        when (storeTask) {
-            is HomeViewModel.UiState.Loading -> {
-                item {
-                    LinearProgressIndicator(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(8.dp),
-                        color = Color.Red
-                    )
-                }
-            }
-
-            is HomeViewModel.UiState.Success -> {
-                item { ShowToast((storeTask as HomeViewModel.UiState.Success<String>).data) }
-            }
-
-            is HomeViewModel.UiState.Error ->
-                item { ShowToast((storeTask as HomeViewModel.UiState.Error).errorMessage) }
-
-            HomeViewModel.UiState.Idle -> {
-
-            }
-        }
-
+        //To increase the readability of the code, I have extracted the content of the screen into separate functions
+        storeTaskContent(this, storeTask)
         item {
-            CalendarView() {
+            CalendarView {
                 showDialog = true
             }
         }
 
-        when (getTask) {
-            is HomeViewModel.UiState.Loading -> {
-                item { LoadingIndicator() }
-            }
+        //To increase the readability of the code, I have extracted the content of the screen into separate functions
+        getTaskContent(
+            this,
+            getTask,
+            selectedTaskId,
+            { selectedTaskId = it },
+            { selectedTaskId?.let { viewModel.deleteTask(it) } })
 
-            is HomeViewModel.UiState.Success -> {
-                val tasks = (getTask as HomeViewModel.UiState.Success<List<GetCalendarTask>>).data
-                stickyHeader {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.White)
-                    ) {
-                        Text(
-                            modifier = Modifier.padding(Dimens.dp8),
-                            text = "Tasks",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                        HorizontalDivider()
-                    }
-                }
-                items(tasks.size) { index ->
-                    TaskItem(tasks[index], selectedTaskId, { selectedTaskId = it }, {
-                        selectedTaskId?.let { viewModel.deleteTask(it) }
-                    })
-                }
-            }
-
-            is HomeViewModel.UiState.Error -> {
-                item { ShowToast((getTask as HomeViewModel.UiState.Error).errorMessage) }
-            }
-
-            HomeViewModel.UiState.Idle -> {
-
-            }
-        }
-
-        when (deleteTask) {
-            is HomeViewModel.UiState.Loading -> {
-
-            }
-
-            is HomeViewModel.UiState.Success -> {
-                item { ShowToast((deleteTask as HomeViewModel.UiState.Success<String>).data) }
-            }
-
-            is HomeViewModel.UiState.Error -> {
-                item { ShowToast((deleteTask as HomeViewModel.UiState.Error).errorMessage) }
-            }
-
-            HomeViewModel.UiState.Idle -> {
-
-            }
-        }
-
-
+        //To increase the readability of the code, I have extracted the content of the screen into separate functions
+        deleteTaskContent(this, deleteTask)
     }
 
     if (showDialog) {
@@ -136,6 +67,80 @@ fun HomeScreen() {
                 showDialog = false
             }
         )
+    }
+}
+
+fun storeTaskContent(scope: LazyListScope, storeTask: UiState<*>) {
+    when (storeTask) {
+        is UiState.Loading -> {
+            scope.item {
+                LinearProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(8.dp),
+                    color = Color.Red
+                )
+            }
+        }
+        is UiState.Success -> {
+            scope.item { ShowToast((storeTask as UiState.Success<String>).data) }
+        }
+        is UiState.Error -> {
+            scope.item { ShowToast(storeTask.errorMessage) }
+        }
+        UiState.Idle -> { /* No UI for Idle state */ }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+fun getTaskContent(
+    scope: LazyListScope,
+    getTask: UiState<*>,
+    selectedTaskId: Int?,
+    onTaskSelected: (Int?) -> Unit,
+    deleteTask: () -> Unit
+) {
+    when (getTask) {
+        is UiState.Loading -> {
+            scope.item { LoadingIndicator() }
+        }
+        is UiState.Success -> {
+            val tasks = (getTask as UiState.Success<List<GetCalendarTask>>).data
+            scope.stickyHeader {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White)
+                ) {
+                    Text(
+                        modifier = Modifier.padding(Dimens.dp8),
+                        text = "Tasks",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    HorizontalDivider()
+                }
+            }
+            scope.items(tasks.size) { index ->
+                TaskItem(tasks[index], selectedTaskId, onTaskSelected, deleteTask)
+            }
+        }
+        is UiState.Error -> {
+            scope.item { ShowToast((getTask as UiState.Error).errorMessage) }
+        }
+        UiState.Idle -> { /* No UI for Idle state */ }
+    }
+}
+
+fun deleteTaskContent(scope: LazyListScope, deleteTask: UiState<*>) {
+    when (deleteTask) {
+        is UiState.Loading -> { /* No UI for Loading state */ }
+        is UiState.Success -> {
+            scope.item { ShowToast((deleteTask as UiState.Success<String>).data) }
+        }
+        is UiState.Error -> {
+            scope.item { ShowToast((deleteTask as UiState.Error).errorMessage) }
+        }
+        UiState.Idle -> { /* No UI for Idle state */ }
     }
 }
 
@@ -175,11 +180,11 @@ fun TaskItem(task: GetCalendarTask, selectedTaskId: Int?, onTaskSelected: (Int?)
 
 @Composable
 fun LoadingIndicator() {
-    // Show loading indicator
+    LinearProgressIndicator(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(8.dp),
+        color = Color.Red
+    )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun CalendarAppPreview() {
-    CalendarView() {}
-}
