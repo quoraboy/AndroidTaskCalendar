@@ -79,7 +79,7 @@ fun HomeScreen() {
             }
 
             is HomeViewModel.UiState.Success -> {
-                val date = (getTask as HomeViewModel.UiState.Success<List<GetCalendarTask>>).data
+                val tasks = (getTask as HomeViewModel.UiState.Success<List<GetCalendarTask>>).data
                 stickyHeader {
                     Column(
                         modifier = Modifier
@@ -94,8 +94,8 @@ fun HomeScreen() {
                         HorizontalDivider()
                     }
                 }
-                items(date.size) { index ->
-                    TaskItem(date[index], selectedTaskId, { selectedTaskId = it }, {
+                items(tasks.size) { index ->
+                    TaskItem(tasks[index], selectedTaskId, { selectedTaskId = it }, {
                         selectedTaskId?.let { viewModel.deleteTask(it) }
                     })
                 }
@@ -139,7 +139,6 @@ fun HomeScreen() {
             onSubmit = { title, description ->
                 viewModel.storeTask(title, description)
                 showDialog = false
-                Log.d("sachin", "$title $description")
             }
         )
     }
