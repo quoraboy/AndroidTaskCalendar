@@ -13,7 +13,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.core.home.model.GetCalendarTask
@@ -147,7 +146,7 @@ fun TaskItem(task: GetCalendarTask, selectedTaskId: Int?, onTaskSelected: (Int?)
             .padding(Dimens.dp8)
             .border(
                 width = Dimens.dp1,
-                color = if (isSelected) Color.Blue else Color.Red,
+                color = if (isSelected) Color.Red else Color.Blue,
                 shape = RoundedCornerShape(size = Dimens.dp8)
             )
     ) {
@@ -178,7 +177,7 @@ fun LoadingIndicator() {
     LinearProgressIndicator(
         modifier = Modifier
             .fillMaxWidth()
-            .height(8.dp),
+            .height(Dimens.dp8),
         color = Color.Red
     )
 }

@@ -34,10 +34,10 @@ fun <T> DropdownSelector(
             modifier = Modifier
                 .border(
                     width = Dimens.dp1,
-                    color = Color.Red,
+                    color = Color.Blue,
                     shape = RoundedCornerShape(size = Dimens.dp8)
                 )
-                .padding(8.dp)
+                .padding(Dimens.dp8)
                 .clickable { expanded = true }
         )
         DropdownMenu(

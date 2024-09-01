@@ -20,8 +20,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.example.feature.Dimens
+import com.example.feature.UtilConstant.EMPTY_STRING
+import com.example.feature.UtilConstant.INT_FIVE
+import com.example.feature.UtilConstant.INT_ONE
+import com.example.feature.UtilConstant.INT_SIX
+import com.example.feature.UtilConstant.INT_ZERO
 import com.example.feature.component.DropdownSelector
 import java.text.DateFormatSymbols
 import java.time.LocalDate
@@ -29,6 +33,7 @@ import java.time.YearMonth
 
 const val START_YEAR = 2000
 const val END_YEAR = 2030
+const val WEIGHT_ONE = 1f
 @Composable
 fun CalendarView(openDialog: () -> Unit) {
     val currentDate = remember { LocalDate.now() }
@@ -79,7 +84,7 @@ fun MonthSelector(selectedMonth: Int, onMonthSelected: (Int) -> Unit) {
 
     DropdownSelector(
         options = monthNames,
-        selectedOption = monthNames[selectedMonth - 1], // Adjust index for month names
+        selectedOption = monthNames[selectedMonth - INT_ONE], // Adjust index for month names
         onOptionSelected = { selectedMonthName ->
             val newMonthIndex = monthNames.indexOf(selectedMonthName) + 1
             onMonthSelected(newMonthIndex)
@@ -100,31 +105,31 @@ fun MonthView(year: Int, month: Int, openDialog: () -> Unit) {
             dayNames.forEach { day ->
                 Text(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(8.dp),
+                        .weight(WEIGHT_ONE)
+                        .padding(Dimens.dp8),
                     text = day, style = MaterialTheme.typography.bodyLarge
                 )
             }
         }
 
         // Days grid
-        var dayCounter = 1
-        for (week in 0..5) {
+        var dayCounter = INT_ONE
+        for (week in INT_ZERO..INT_FIVE) {
             key(week) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    for (day in 0..6) {
+                    for (day in INT_ZERO..INT_SIX) {
                         Box(
                             modifier = Modifier
-                                .weight(1f)
-                                .height(48.dp)
-                                .padding(4.dp),
+                                .weight(WEIGHT_ONE)
+                                .height(Dimens.dp48)
+                                .padding(Dimens.dp4),
                             contentAlignment = Alignment.Center
                         ) {
-                            if (week == 0 && day < firstDayOfMonth || dayCounter > daysInMonth) {
-                                Text("")
+                            if (week == INT_ZERO && day < firstDayOfMonth || dayCounter > daysInMonth) {
+                                Text(EMPTY_STRING)
                             } else {
                                 Text(modifier = Modifier.clickable {
                                     openDialog()
