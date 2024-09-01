@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.home.data.HomeRepository
 import com.example.core.home.model.GetCalendarTask
-import com.example.feature.UiState
+import com.example.feature.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,56 +17,56 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(private val homeRepository: HomeRepository) : ViewModel() {
 
 
-    private val _uiStoreTaskState = MutableStateFlow<UiState<String>>(UiState.Idle)
-    val uiStoreTaskState: StateFlow<UiState<String>> = _uiStoreTaskState.asStateFlow()
+    private val _uiStoreTaskState = MutableStateFlow<UIState<String>>(UIState.Idle)
+    val uiStoreTaskState: StateFlow<UIState<String>> = _uiStoreTaskState.asStateFlow()
 
-    private val _uiGetTaskState = MutableStateFlow<UiState<List<GetCalendarTask>>>(UiState.Idle)
-    val uiGetTaskState: StateFlow<UiState<List<GetCalendarTask>>> = _uiGetTaskState.asStateFlow()
+    private val _uiGetTaskState = MutableStateFlow<UIState<List<GetCalendarTask>>>(UIState.Idle)
+    val uiGetTaskState: StateFlow<UIState<List<GetCalendarTask>>> = _uiGetTaskState.asStateFlow()
 
-    private val _uiDeleteTaskState = MutableStateFlow<UiState<String>>(UiState.Idle)
-    val uiDeleteTaskState: StateFlow<UiState<String>> = _uiDeleteTaskState.asStateFlow()
+    private val _uiDeleteTaskState = MutableStateFlow<UIState<String>>(UIState.Idle)
+    val uiDeleteTaskState: StateFlow<UIState<String>> = _uiDeleteTaskState.asStateFlow()
 
     init {
         getTasks()
     }
 
     fun storeTask(title: String, description: String) {
-        _uiStoreTaskState.value = UiState.Loading
+        _uiStoreTaskState.value = UIState.Loading
         viewModelScope.launch {
             homeRepository.storeCalendarTask(title, description)
                 .catch { e ->
-                    _uiStoreTaskState.value = UiState.Error(e.message.toString())
+                    _uiStoreTaskState.value = UIState.Error(e.message.toString())
                 }.collect {
-                    _uiStoreTaskState.value = UiState.Success(data = "Task stored successfully")
+                    _uiStoreTaskState.value = UIState.Success(data = "Task stored successfully")
                     getTasks()
                 }
         }
     }
 
     private fun getTasks() {
-        _uiGetTaskState.value = UiState.Loading
+        _uiGetTaskState.value = UIState.Loading
         viewModelScope.launch {
             homeRepository.getCalendarTask()
                 .catch { e ->
                     _uiGetTaskState.value =
-                        UiState.Error(e.message.toString())
+                        UIState.Error(e.message.toString())
                 }
                 .collect { result ->
                     _uiGetTaskState.value =
-                        UiState.Success(result)
+                        UIState.Success(result)
                 }
         }
     }
 
     fun deleteTask(it: Int) {
-        _uiDeleteTaskState.value = UiState.Loading
+        _uiDeleteTaskState.value = UIState.Loading
         viewModelScope.launch {
             homeRepository.deleteCalendarTask(it)
                 .catch { e ->
-                    _uiDeleteTaskState.value = UiState.Error(e.message.toString())
+                    _uiDeleteTaskState.value = UIState.Error(e.message.toString())
                 }
                 .collect {
-                    _uiDeleteTaskState.value = UiState.Success(data = "Task deleted successfully")
+                    _uiDeleteTaskState.value = UIState.Success(data = "Task deleted successfully")
                     getTasks()
                 }
         }

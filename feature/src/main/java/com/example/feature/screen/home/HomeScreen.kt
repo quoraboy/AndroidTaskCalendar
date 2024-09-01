@@ -18,7 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.core.home.model.GetCalendarTask
 import com.example.feature.Dimens
-import com.example.feature.UiState
+import com.example.feature.UIState
 import com.example.feature.component.InputDialog
 import com.example.feature.component.ShowToast
 
@@ -70,42 +70,37 @@ fun HomeScreen() {
     }
 }
 
-fun storeTaskContent(scope: LazyListScope, storeTask: UiState<*>) {
+fun storeTaskContent(scope: LazyListScope, storeTask: UIState<*>) {
     when (storeTask) {
-        is UiState.Loading -> {
+        is UIState.Loading -> {
             scope.item {
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(8.dp),
-                    color = Color.Red
-                )
+                LoadingIndicator()
             }
         }
-        is UiState.Success -> {
-            scope.item { ShowToast((storeTask as UiState.Success<String>).data) }
+        is UIState.Success -> {
+            scope.item { ShowToast((storeTask as UIState.Success<String>).data) }
         }
-        is UiState.Error -> {
+        is UIState.Error -> {
             scope.item { ShowToast(storeTask.errorMessage) }
         }
-        UiState.Idle -> { /* No UI for Idle state */ }
+        UIState.Idle -> { /* No UI for Idle state */ }
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 fun getTaskContent(
     scope: LazyListScope,
-    getTask: UiState<*>,
+    getTask: UIState<*>,
     selectedTaskId: Int?,
     onTaskSelected: (Int?) -> Unit,
     deleteTask: () -> Unit
 ) {
     when (getTask) {
-        is UiState.Loading -> {
+        is UIState.Loading -> {
             scope.item { LoadingIndicator() }
         }
-        is UiState.Success -> {
-            val tasks = (getTask as UiState.Success<List<GetCalendarTask>>).data
+        is UIState.Success -> {
+            val tasks = (getTask as UIState.Success<List<GetCalendarTask>>).data
             scope.stickyHeader {
                 Column(
                     modifier = Modifier
@@ -124,23 +119,23 @@ fun getTaskContent(
                 TaskItem(tasks[index], selectedTaskId, onTaskSelected, deleteTask)
             }
         }
-        is UiState.Error -> {
-            scope.item { ShowToast((getTask as UiState.Error).errorMessage) }
+        is UIState.Error -> {
+            scope.item { ShowToast((getTask as UIState.Error).errorMessage) }
         }
-        UiState.Idle -> { /* No UI for Idle state */ }
+        UIState.Idle -> { /* No UI for Idle state */ }
     }
 }
 
-fun deleteTaskContent(scope: LazyListScope, deleteTask: UiState<*>) {
+fun deleteTaskContent(scope: LazyListScope, deleteTask: UIState<*>) {
     when (deleteTask) {
-        is UiState.Loading -> { /* No UI for Loading state */ }
-        is UiState.Success -> {
-            scope.item { ShowToast((deleteTask as UiState.Success<String>).data) }
+        is UIState.Loading -> { /* No UI for Loading state */ }
+        is UIState.Success -> {
+            scope.item { ShowToast((deleteTask as UIState.Success<String>).data) }
         }
-        is UiState.Error -> {
-            scope.item { ShowToast((deleteTask as UiState.Error).errorMessage) }
+        is UIState.Error -> {
+            scope.item { ShowToast((deleteTask as UIState.Error).errorMessage) }
         }
-        UiState.Idle -> { /* No UI for Idle state */ }
+        UIState.Idle -> { /* No UI for Idle state */ }
     }
 }
 

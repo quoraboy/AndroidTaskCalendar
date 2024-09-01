@@ -27,6 +27,8 @@ import java.text.DateFormatSymbols
 import java.time.LocalDate
 import java.time.YearMonth
 
+const val START_YEAR = 2000
+const val END_YEAR = 2030
 @Composable
 fun CalendarView(openDialog: () -> Unit) {
     val currentDate = remember { LocalDate.now() }
@@ -63,7 +65,7 @@ fun CalendarView(openDialog: () -> Unit) {
 @Composable
 fun YearSelector(selectedYear: Int, onYearSelected: (Int) -> Unit) {
     DropdownSelector(
-        options = (2000..2030).toList(),
+        options = (START_YEAR..END_YEAR).toList(),
         selectedOption = selectedYear,
         onOptionSelected = onYearSelected
     )
