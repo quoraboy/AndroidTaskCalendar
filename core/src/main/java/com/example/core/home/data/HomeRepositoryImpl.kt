@@ -40,7 +40,12 @@ class HomeRepositoryImpl @Inject constructor(private val apiService: ApiService)
 
     override fun deleteCalendarTask(taskId: Int): Flow<SimpleStatusResponse> {
         return flow {
-            emit(apiService.deleteCalendarTask(DeleteCalendarTaskRequest(taskId = taskId)))
+            val response = apiService.deleteCalendarTask(DeleteCalendarTaskRequest(taskId = taskId))
+            if (response.isSuccessful) {
+                emit(response.body()?: throw Exception("Empty response body"))
+            } else {
+                throw Exception(response.message())
+            }
         }
     }
 

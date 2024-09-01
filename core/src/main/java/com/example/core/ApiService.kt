@@ -17,5 +17,5 @@ interface ApiService {
     suspend fun getCalendarTaskList(@Body requestBody: GetCalendarTaskRequest): Response<GetCalendarTaskResponse>
 
     @POST("api/deleteCalendarTask")
-    suspend fun deleteCalendarTask(@Body requestBody: DeleteCalendarTaskRequest): SimpleStatusResponse
+    suspend fun deleteCalendarTask(@Body requestBody: DeleteCalendarTaskRequest): Response<SimpleStatusResponse>
 }
