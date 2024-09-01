@@ -4,9 +4,8 @@ import com.example.feature.screen.home.HomeViewModel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.core.home.data.HomeRepository
-import com.example.core.home.model.DeleteCalendarTaskResponse
 import com.example.core.home.model.GetCalendarTask
-import com.example.core.home.model.StoreCalendarTaskResponse
+import com.example.core.home.model.SimpleStatusResponse
 import com.example.core.home.model.TaskDetail
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
@@ -62,7 +61,7 @@ class HomeViewModelTest {
         val title = "Test Title"
         val description = "Test Description"
         `when`(homeRepository.storeCalendarTask(title, description)).thenReturn(flow { emit(
-            StoreCalendarTaskResponse("Task stored successfully")
+            SimpleStatusResponse("Task stored successfully")
         ) })
 
         // When
@@ -118,7 +117,7 @@ class HomeViewModelTest {
         // Given
         val taskId = 1
         `when`(homeRepository.deleteCalendarTask(taskId)).thenReturn(flow { emit(
-            DeleteCalendarTaskResponse("Task deleted successfully")
+            SimpleStatusResponse("Task deleted successfully")
         ) })
 
         // When

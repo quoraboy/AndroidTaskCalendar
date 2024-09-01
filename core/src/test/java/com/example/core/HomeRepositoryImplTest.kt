@@ -32,7 +32,7 @@ class HomeRepositoryImplTest {
         val title = "Test Title"
         val description = "Test Description"
         val requestBody = StoreCalendarTaskRequest(task = Task(title, description))
-        val response = StoreCalendarTaskResponse("Task stored successfully")
+        val response = SimpleStatusResponse("Task stored successfully")
         `when`(apiService.storeCalendarTask(requestBody)).thenReturn(response)
 
         // When
@@ -48,22 +48,22 @@ class HomeRepositoryImplTest {
         // Given
         val tasks = listOf(GetCalendarTask(1, TaskDetail("Task 1", "Description 1")))
         val response = GetCalendarTaskResponse(tasks)
-        `when`(apiService.getCalendarTask(GetCalendarTaskRequest())).thenReturn(response)
+        `when`(apiService.getCalendarTaskList(GetCalendarTaskRequest())).thenReturn(response)
 
         // When
         val result = homeRepository.getCalendarTask().single()
 
         // Then
         assertEquals(tasks, result)
-        verify(apiService).getCalendarTask(GetCalendarTaskRequest())
+        verify(apiService).getCalendarTaskList(GetCalendarTaskRequest())
     }
 
     @Test
     fun `deleteCalendarTask should return success response`() = runTest {
         // Given
         val taskId = 1
-        val requestBody = DeleteCalenderTaskRequest(taskId = taskId)
-        val response = DeleteCalendarTaskResponse("Task deleted successfully")
+        val requestBody = DeleteCalendarTaskRequest(taskId = taskId)
+        val response = SimpleStatusResponse("Task deleted successfully")
         `when`(apiService.deleteCalendarTask(requestBody)).thenReturn(response)
 
         // When

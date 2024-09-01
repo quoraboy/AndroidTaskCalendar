@@ -19,14 +19,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.Dialog
 import com.example.feature.Dimens
+import com.example.feature.UtilConstant.EMPTY_STRING
 
 @Composable
 fun InputDialog(
     onDismissRequest: () -> Unit,
     onSubmit: (String, String) -> Unit
 ) {
-    var titleText by remember { mutableStateOf("") }
-    var descriptionText by remember { mutableStateOf("") }
+    var titleText by remember { mutableStateOf(EMPTY_STRING) }
+    var descriptionText by remember { mutableStateOf(EMPTY_STRING) }
 
     Dialog(onDismissRequest = onDismissRequest) {
         Column(

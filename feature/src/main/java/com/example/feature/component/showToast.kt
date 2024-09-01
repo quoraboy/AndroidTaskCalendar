@@ -8,5 +8,4 @@ import androidx.compose.ui.platform.LocalContext
 fun ShowToast(message: String){
     val context = LocalContext.current
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-
 }
