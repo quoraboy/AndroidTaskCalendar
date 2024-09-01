@@ -46,6 +46,11 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.mockito.inline)
+    testImplementation (libs.kotlinx.coroutines.test.v181)
 }
 
 kapt {

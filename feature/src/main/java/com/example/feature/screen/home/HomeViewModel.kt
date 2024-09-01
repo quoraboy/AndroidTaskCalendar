@@ -43,7 +43,7 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
         }
     }
 
-    private fun getTasks() {
+    fun getTasks() {
         _uiGetTaskState.value = UIState.Loading
         viewModelScope.launch {
             homeRepository.getCalendarTask()

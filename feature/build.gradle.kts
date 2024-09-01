@@ -61,6 +61,11 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation (libs.coil.compose)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.mockito.inline)
+    testImplementation (libs.kotlinx.coroutines.test.v181)
 }
 
 kapt {

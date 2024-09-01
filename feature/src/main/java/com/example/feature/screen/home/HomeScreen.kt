@@ -164,7 +164,7 @@ fun TaskItem(task: GetCalendarTask, selectedTaskId: Int?, onTaskSelected: (Int?)
                     text = "Description: ${task.taskDetail.description}"
                 )
                 if (isSelected)
-                    Text(text = "Delete Task", color = Color.Magenta, modifier = Modifier.clickable {
+                    Text(text = "Delete", color = Color.Magenta, modifier = Modifier.clickable {
                         deleteTask()
                     })
 
