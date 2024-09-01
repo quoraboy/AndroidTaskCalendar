@@ -66,6 +66,7 @@ dependencies {
     testImplementation(libs.androidx.core.testing)
     testImplementation(libs.mockito.inline)
     testImplementation (libs.kotlinx.coroutines.test.v181)
+    implementation(libs.retrofit)
 }
 
 kapt {

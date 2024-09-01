@@ -5,6 +5,7 @@ import com.example.core.home.model.GetCalendarTaskRequest
 import com.example.core.home.model.GetCalendarTaskResponse
 import com.example.core.home.model.StoreCalendarTaskRequest
 import com.example.core.home.model.SimpleStatusResponse
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -13,7 +14,7 @@ interface ApiService {
     suspend fun storeCalendarTask(@Body requestBody: StoreCalendarTaskRequest): SimpleStatusResponse
 
     @POST("api/getCalendarTaskList")
-    suspend fun getCalendarTaskList(@Body requestBody: GetCalendarTaskRequest): GetCalendarTaskResponse
+    suspend fun getCalendarTaskList(@Body requestBody: GetCalendarTaskRequest): Response<GetCalendarTaskResponse>
 
     @POST("api/deleteCalendarTask")
     suspend fun deleteCalendarTask(@Body requestBody: DeleteCalendarTaskRequest): SimpleStatusResponse

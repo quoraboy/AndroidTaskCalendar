@@ -12,10 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val homeRepository: HomeRepository) : ViewModel() {
-
 
     private val _uiStoreTaskState = MutableStateFlow<UIState<String>>(UIState.Idle)
     val uiStoreTaskState: StateFlow<UIState<String>> = _uiStoreTaskState.asStateFlow()
@@ -48,15 +46,18 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
         viewModelScope.launch {
             homeRepository.getCalendarTask()
                 .catch { e ->
-                    _uiGetTaskState.value =
-                        UIState.Error(e.message.toString())
+                    _uiGetTaskState.value = UIState.Error(e.message.toString())
                 }
                 .collect { result ->
-                    _uiGetTaskState.value =
-                        UIState.Success(result)
+                    result.onSuccess { tasks ->
+                        _uiGetTaskState.value = UIState.Success(tasks)
+                    }.onFailure { exception ->
+                        _uiGetTaskState.value = UIState.Error(exception.message.toString())
+                    }
                 }
         }
     }
+
 
     fun deleteTask(it: Int) {
         _uiDeleteTaskState.value = UIState.Loading
@@ -71,5 +72,4 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
                 }
         }
     }
-
 }
