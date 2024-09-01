@@ -1,6 +1,6 @@
-The project have 3 module app module, fearture module, core module
+The project has 3 modules app module, feature module, core module
 
-1. Feature module consist of UI layer i.e screens and viewModel
-2. Core module consist of DataLayer(i.e Repository and usecase class) and network Module 
+1. Feature module consists of UI layer i.e screens and ViewModel
+2. Core module consist of DataLayer(i.e Repository and UseCase class) and Network Module 
 
-The project uses, MVVM clean arcitecture, Jetpack compose UI, Hilt dependecy injection, Retrofit, kotlin coroutine
+The project uses, MVVM architecture, Jetpack compose UI, Hilt dependency injection, Retrofit, kotlin coroutine
