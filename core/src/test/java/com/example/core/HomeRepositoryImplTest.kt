@@ -11,6 +11,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
+import retrofit2.Response
 
 @ExperimentalCoroutinesApi
 class HomeRepositoryImplTest {
@@ -33,7 +34,7 @@ class HomeRepositoryImplTest {
         val description = "Test Description"
         val requestBody = StoreCalendarTaskRequest(task = Task(title, description))
         val response = SimpleStatusResponse("Task stored successfully")
-        `when`(apiService.storeCalendarTask(requestBody)).thenReturn(response)
+        `when`(apiService.storeCalendarTask(requestBody)).thenReturn(Response.success(response))
 
         // When
         val result = homeRepository.storeCalendarTask(title, description).single()
@@ -47,11 +48,11 @@ class HomeRepositoryImplTest {
     fun `getCalendarTask should return list of tasks`() = runTest {
         // Given
         val tasks = listOf(GetCalendarTask(1, TaskDetail("Task 1", "Description 1")))
-        val response = GetCalendarTaskResponse(tasks)
+        val response = Response.success(GetCalendarTaskResponse(tasks))
         `when`(apiService.getCalendarTaskList(GetCalendarTaskRequest())).thenReturn(response)
 
         // When
-        val result = homeRepository.getCalendarTask().single()
+        val result = homeRepository.getCalendarTask().single().getOrNull()
 
         // Then
         assertEquals(tasks, result)
@@ -64,7 +65,7 @@ class HomeRepositoryImplTest {
         val taskId = 1
         val requestBody = DeleteCalendarTaskRequest(taskId = taskId)
         val response = SimpleStatusResponse("Task deleted successfully")
-        `when`(apiService.deleteCalendarTask(requestBody)).thenReturn(response)
+        `when`(apiService.deleteCalendarTask(requestBody)).thenReturn(Response.success(response))
 
         // When
         val result = homeRepository.deleteCalendarTask(taskId).single()

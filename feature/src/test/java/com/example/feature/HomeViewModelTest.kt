@@ -90,7 +90,7 @@ class HomeViewModelTest {
     fun `getTasks should update uiGetTaskState to Success when repository call is successful`() = runTest {
         // Given
         val tasks = listOf(GetCalendarTask(1, TaskDetail("Task 1", "Description 1")))
-        `when`(homeRepository.getCalendarTask()).thenReturn(flow { emit(tasks) })
+        `when`(homeRepository.getCalendarTask()).thenReturn(flow { emit(Result.success(tasks)) })
 
         // When
         homeViewModel.getTasks()
