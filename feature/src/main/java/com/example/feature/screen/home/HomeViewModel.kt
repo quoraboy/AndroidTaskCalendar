@@ -3,7 +3,7 @@ package com.example.feature.screen.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.home.data.HomeRepository
-import com.example.core.home.model.GetCalendarTask
+import com.example.core.home.model.TaskViewState
 import com.example.feature.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,8 +18,8 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
     private val _uiStoreTaskState = MutableStateFlow<UIState<String>>(UIState.Idle)
     val uiStoreTaskState: StateFlow<UIState<String>> = _uiStoreTaskState.asStateFlow()
 
-    private val _uiGetTaskState = MutableStateFlow<UIState<List<GetCalendarTask>>>(UIState.Idle)
-    val uiGetTaskState: StateFlow<UIState<List<GetCalendarTask>>> = _uiGetTaskState.asStateFlow()
+    private val _uiGetTaskState = MutableStateFlow<UIState<List<TaskViewState>>>(UIState.Idle)
+    val uiGetTaskState: StateFlow<UIState<List<TaskViewState>>> = _uiGetTaskState.asStateFlow()
 
     private val _uiDeleteTaskState = MutableStateFlow<UIState<String>>(UIState.Idle)
     val uiDeleteTaskState: StateFlow<UIState<String>> = _uiDeleteTaskState.asStateFlow()

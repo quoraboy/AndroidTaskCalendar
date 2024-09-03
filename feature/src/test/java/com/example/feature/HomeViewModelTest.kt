@@ -1,8 +1,8 @@
 package com.example.feature
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.feature.screen.home.HomeViewModel
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.core.home.data.HomeRepository
 import com.example.core.home.model.GetCalendarTask
 import com.example.core.home.model.SimpleStatusResponse
@@ -29,6 +29,12 @@ class HomeViewModelTest {
 
     private val testDispatcher = TestCoroutineDispatcher()
 
+    //Purpose: It sets the main dispatcher to a TestCoroutineDispatcher
+    // for unit testing coroutines.
+    //Usage: Even though you don't see it explicitly used
+    // in the test methods, it ensures that all coroutines
+    // launched in the viewModelScope use the TestCoroutineDispatcher.
+    // This allows you to control the execution of coroutines and advance time in tests.
     @get:Rule
     val coroutineRule = object : TestWatcher() {
         override fun starting(description: Description?) {
@@ -41,6 +47,12 @@ class HomeViewModelTest {
         }
     }
 
+    //Purpose: It ensures that LiveData updates happen instantly and synchronously during tests.
+    //Usage: This rule is necessary for testing LiveData because
+    // it forces all background operations to run on the same thread,
+    // making it easier to test LiveData changes.
+    //you don't need this rule because StatFlow or live data are thread safe it
+    // means you can update them from any thread
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 

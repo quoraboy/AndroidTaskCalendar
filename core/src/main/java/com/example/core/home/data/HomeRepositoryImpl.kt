@@ -2,15 +2,13 @@ package com.example.core.home.data
 
 import com.example.core.ApiService
 import com.example.core.home.model.DeleteCalendarTaskRequest
-import com.example.core.home.model.GetCalendarTask
 import com.example.core.home.model.GetCalendarTaskRequest
-import com.example.core.home.model.GetCalendarTaskResponse
 import com.example.core.home.model.StoreCalendarTaskRequest
 import com.example.core.home.model.SimpleStatusResponse
 import com.example.core.home.model.Task
+import com.example.core.home.model.TaskViewState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.Response
 import javax.inject.Inject
 
 class HomeRepositoryImpl @Inject constructor(private val apiService: ApiService) : HomeRepository {
@@ -26,11 +24,15 @@ class HomeRepositoryImpl @Inject constructor(private val apiService: ApiService)
         }
     }
 
-    override fun getCalendarTask(): Flow<Result<List<GetCalendarTask>>> {
+    override fun getCalendarTask(): Flow<Result<List<TaskViewState>>> {
         return flow {
             val response = apiService.getCalendarTaskList(GetCalendarTaskRequest())
             if (response.isSuccessful) {
-                emit(Result.success(response.body()?.tasks ?: emptyList()))
+                val tasks =
+                response.body()?.tasks?.mapNotNull { task ->
+                    task.taskId?.let { id -> TaskViewState(id, task.taskDetail.title, task.taskDetail.description) }
+                }
+                emit(Result.success(tasks ?: emptyList()))
             } else {
                 emit(Result.failure(Exception(response.message())))
             }
