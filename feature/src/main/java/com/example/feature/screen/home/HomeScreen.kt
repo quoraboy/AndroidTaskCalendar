@@ -46,7 +46,7 @@ fun HomeScreen() {
             }
 
             is UIState.Error -> ShowToast(message = (storeTask as UIState.Error).errorMessage)
-            UIState.Idle -> { /* No UI for Idle state */
+            is UIState.Idle -> { /* No UI for Idle state */
             }
         }
     }
